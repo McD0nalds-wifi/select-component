@@ -1,0 +1,31 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react",
+        "strict": true,
+        "alwaysStrict": true,
+        "strictFunctionTypes": true,
+        "declaration": true, // false
+        "allowJs": false,
+        "noImplicitReturns": true,
+        "target": "es2016",
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "noUnusedLocals": false,
+        "removeComments": false,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "experimentalDecorators": true,
+        "module": "ESNext",
+        "baseUrl": ".",
+        "paths": {
+            "components": ["src/components/index"],
+            "types": ["src/types/index"]
+        }
+    },
+    "filesGlob": ["src/**/*.ts", "src/**/*.tsx"],
+    "include": ["src", "declaration.d.ts"]
+}
