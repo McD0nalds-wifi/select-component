@@ -1,0 +1,138 @@
+.wrapper {
+    position: relative;
+
+    .title {
+        position: absolute;
+        top: -22px;
+        font-size: 12px;
+        color: $asphalt01;
+        opacity: 0.6;
+        font-weight: 600;
+    }
+
+    .placeholder {
+        font-size: 14px;
+        position: absolute;
+        top: 8px;
+        color: $asphalt01;
+        left: 10px;
+        pointer-events: none;
+    }
+
+    .input {
+        border-radius: 20px;
+        border: 1px solid $asphalt01;
+        background-color: $white;
+        outline: none;
+        width: 100%;
+        height: 33px;
+        transition: 0.2s;
+        box-sizing: border-box;
+        padding-left: 10px;
+        text-align: left;
+        color: $black;
+        cursor: pointer;
+
+        &:hover {
+            border-color: $sky03;
+        }
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        &:focus {
+            border-color: $sky03;
+            box-shadow: 0px 0px 0px 2px rgba($sky04, 0.5);
+        }
+    }
+
+    .inputError {
+        border: 1px solid $ruby01;
+
+        &:hover {
+            border-color: $ruby01;
+        }
+
+        &:focus {
+            border-color: $ruby01;
+            box-shadow: 0px 0px 0px 2px rgba($ruby01, 0.5);
+        }
+    }
+
+    .error {
+        position: absolute;
+        color: $ruby01;
+        right: 0;
+    }
+
+    .dropdownWrapper {
+        box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+        border-radius: 10px;
+        padding: 10px;
+        transition: 0.2s;
+        position: absolute;
+        width: 100%;
+        background-color: $white;
+        z-index: 9;
+        animation: fade-in 0.1s linear 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 4px;
+
+        .dropdownItem {
+            transition: 0.2s;
+            padding: 4px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: $black;
+
+            &:hover {
+                background-color: rgba($sky04, 0.5);
+                color: $white;
+            }
+        }
+
+        .dropdownItemActive {
+            color: $white;
+            background-color: $sky03;
+        }
+
+        .empty_error_wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .empty_error_title {
+            font-weight: 600;
+        }
+    }
+
+    .loading_wrapper {
+        background-color: $white;
+        cursor: progress;
+        width: 100%;
+        height: 33px;
+        position: absolute;
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
