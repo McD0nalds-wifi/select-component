@@ -29,17 +29,25 @@ const MainApp: React.FC = () => {
             value: 'Саратов',
             id: 5,
         },
-        // {
-        //     value: 'Ижевск',
-        //     id: 6,
-        // },
+        {
+            value: 'Ижевск',
+            id: 6,
+        },
+        {
+            value: 'Петропаловск',
+            id: 7,
+        },
+        {
+            value: 'Казань',
+            id: 8,
+        },
     ]
 
     const [selectedCity, setSelectedCity] = React.useState<ModelsView.ISelectedData | null>(null)
 
     return (
         <div className={style.wrapper}>
-            <div style={{ width: '200px' }}>
+            <div className={style.wrapper__select}>
                 <Select
                     title={'Город'}
                     placeholder={'Выберите город'}

@@ -51,9 +51,15 @@ const Select: React.FC<ModelsView.IInputSelectProps> = ({
                 } else {
                     setDropdownOpen(true)
                 }
+            } else if (event.key === 'ArrowDown' && isDropdownOpen) {
+                const newHoverItemIndex = selectList.length === hoverItemIndex + 1 ? 0 : hoverItemIndex + 1
+                setHoverItemIndex(newHoverItemIndex)
+            } else if (event.key === 'ArrowUp' && isDropdownOpen) {
+                const newHoverItemIndex = hoverItemIndex === 0 ? selectList.length - 1 : hoverItemIndex - 1
+                setHoverItemIndex(newHoverItemIndex)
             }
         },
-        [hoverItemIndex],
+        [hoverItemIndex, isDropdownOpen],
     )
 
     React.useEffect(() => {
@@ -96,17 +102,15 @@ const Select: React.FC<ModelsView.IInputSelectProps> = ({
                 >
                     {selectList.length > 0 ? (
                         selectList.map((selectItem: ModelsView.ISelectedData, index: number): JSX.Element => {
-                            let itemClassName: string = `${style.dropdown__item} ${
-                                hoverItemIndex === index ? style.dropdown__item_hover : ''
-                            } ${
+                            let hoverClassName: string = hoverItemIndex === index ? style.dropdown__item_hover : ''
+                            let activeClassName: string =
                                 selectedItem && selectedItem.value === selectItem.value
                                     ? style.dropdown__item_active
                                     : ''
-                            }`
 
                             return (
                                 <div
-                                    className={itemClassName}
+                                    className={`${style.dropdown__item} ${hoverClassName} ${activeClassName}`}
                                     key={`InputSelect-Item-${selectItem.id}`}
                                     onClick={() => dropdownClickHandler(selectItem)}
                                     onMouseEnter={() => setHoverItemIndex(index)}
@@ -117,7 +121,7 @@ const Select: React.FC<ModelsView.IInputSelectProps> = ({
                         })
                     ) : (
                         <div className={style.empty}>
-                            {/* <div className={style.empty__title}>{emptyErrorTitle}</div> */}
+                            <div className={style.empty__title}>Нет данных</div>
                         </div>
                     )}
                 </div>
