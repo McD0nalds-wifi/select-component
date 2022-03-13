@@ -21,6 +21,18 @@ const MainApp: React.FC = () => {
             value: 'Челябинск',
             id: 3,
         },
+        {
+            value: 'Магнитогорск',
+            id: 4,
+        },
+        {
+            value: 'Саратов',
+            id: 5,
+        },
+        // {
+        //     value: 'Ижевск',
+        //     id: 6,
+        // },
     ]
 
     const [selectedCity, setSelectedCity] = React.useState<ModelsView.ISelectedData | null>(null)

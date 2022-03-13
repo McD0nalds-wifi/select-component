@@ -9,6 +9,6 @@ export interface IInputSelectProps {
     selectedItem: ISelectedData | null
     error: string | null
     selectList: ISelectedData[]
+    numberOfLines?: number
     onChange: (value: ISelectedData) => void
-    onBlur?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }

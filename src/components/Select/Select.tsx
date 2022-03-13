@@ -6,33 +6,75 @@ import { ModelsView } from 'types'
 
 /* START - View Select additional imports and module code. */
 
+const DROPDOWN_OFFSET = 10
+const DROPDOWN_ITEM_HEIGHT = 37
+
 const Select: React.FC<ModelsView.IInputSelectProps> = ({
     title,
     placeholder,
     selectedItem,
     error,
     selectList,
+    numberOfLines = 5,
     onChange,
 }) => {
     const [isDropdownOpen, setDropdownOpen] = React.useState<boolean>(false)
+    const [hoverItemIndex, setHoverItemIndex] = React.useState<number>(0)
     const dropdownRef = React.useRef<HTMLDivElement | null>(null)
 
+    /* START - Tracking side-effects. */
     React.useEffect(() => {
-        const handleClickOutside = (event: MouseEvent): void => {
+        if (selectedItem) {
+            setHoverItemIndex(-1)
+        }
+    }, [isDropdownOpen])
+
+    React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setDropdownOpen(false)
             }
         }
 
         document.addEventListener('mousedown', handleClickOutside)
+
         return () => {
             document.removeEventListener('mousedown', handleClickOutside)
         }
     }, [dropdownRef])
 
-    const dropdownClickHandler = (value: ModelsView.ISelectedData): void => {
+    const handleKeyDown = React.useCallback(
+        (event: KeyboardEvent) => {
+            if (event.key === 'Enter') {
+                if (isDropdownOpen) {
+                    dropdownClickHandler(selectList[hoverItemIndex])
+                } else {
+                    setDropdownOpen(true)
+                }
+            }
+        },
+        [hoverItemIndex],
+    )
+
+    React.useEffect(() => {
+        document.addEventListener('keydown', handleKeyDown)
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown)
+        }
+    }, [handleKeyDown])
+    /* END - Tracking side-effects. */
+
+    const dropdownClickHandler = (value: ModelsView.ISelectedData) => {
         onChange(value)
         setDropdownOpen(false)
+    }
+
+    const inputClickHandler = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+        // if the click was made with the mouse
+        if (event.detail !== 0) {
+            setDropdownOpen(true)
+        }
     }
 
     return (
@@ -40,34 +82,42 @@ const Select: React.FC<ModelsView.IInputSelectProps> = ({
             <p className={style.title}>{title}</p>
             {selectedItem === null ? <p className={style.placeholder}>{placeholder}</p> : null}
             <input
-                className={error ? `${style.input} ${style.inputError}` : style.input}
+                className={error ? `${style.input} ${style.input_error}` : style.input}
                 type={'button'}
                 value={selectedItem ? selectedItem.value : ''}
-                onClick={() => setDropdownOpen(true)}
+                onClick={inputClickHandler}
             />
-            {/* <div className={error ? `${style.input} ${style.inputError}` : style.input}>{value ? value : ''}</div> */}
 
             {isDropdownOpen ? (
-                <div className={style.dropdownWrapper} ref={dropdownRef}>
+                <div
+                    className={style.dropdown}
+                    ref={dropdownRef}
+                    style={{ maxHeight: numberOfLines * DROPDOWN_ITEM_HEIGHT + DROPDOWN_OFFSET }}
+                >
                     {selectList.length > 0 ? (
-                        selectList.map(
-                            (selectItem: ModelsView.ISelectedData): JSX.Element => (
+                        selectList.map((selectItem: ModelsView.ISelectedData, index: number): JSX.Element => {
+                            let itemClassName: string = `${style.dropdown__item} ${
+                                hoverItemIndex === index ? style.dropdown__item_hover : ''
+                            } ${
+                                selectedItem && selectedItem.value === selectItem.value
+                                    ? style.dropdown__item_active
+                                    : ''
+                            }`
+
+                            return (
                                 <div
-                                    className={`${style.dropdownItem} ${
-                                        selectedItem && selectedItem.value === selectItem.value
-                                            ? style.dropdownItemActive
-                                            : null
-                                    }`}
+                                    className={itemClassName}
                                     key={`InputSelect-Item-${selectItem.id}`}
                                     onClick={() => dropdownClickHandler(selectItem)}
+                                    onMouseEnter={() => setHoverItemIndex(index)}
                                 >
                                     {selectItem.value}
                                 </div>
-                            ),
-                        )
+                            )
+                        })
                     ) : (
-                        <div className={style.empty_error_wrapper}>
-                            {/* <div className={style.empty_error_title}>{emptyErrorTitle}</div> */}
+                        <div className={style.empty}>
+                            {/* <div className={style.empty__title}>{emptyErrorTitle}</div> */}
                         </div>
                     )}
                 </div>
