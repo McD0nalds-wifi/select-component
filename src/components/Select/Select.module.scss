@@ -84,6 +84,8 @@
     gap: 10px;
     margin-top: 4px;
     overflow: auto;
+    opacity: 0;
+    pointer-events: none;
 
     &::-webkit-scrollbar {
         width: 6px; /* ширина scrollbar */
@@ -95,6 +97,11 @@
         background-color: $asphalt01; /* цвет плашки */
         border-radius: 42px; /* закругления плашки */
     }
+}
+
+.dropdown_open {
+    opacity: 1;
+    pointer-events: all;
 }
 
 .dropdown__item {

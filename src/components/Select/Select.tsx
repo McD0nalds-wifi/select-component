@@ -54,9 +54,13 @@ const Select: React.FC<ModelsView.IInputSelectProps> = ({
             } else if (event.key === 'ArrowDown' && isDropdownOpen) {
                 const newHoverItemIndex = selectList.length === hoverItemIndex + 1 ? 0 : hoverItemIndex + 1
                 setHoverItemIndex(newHoverItemIndex)
+
+                scrollDropdownItems(newHoverItemIndex)
             } else if (event.key === 'ArrowUp' && isDropdownOpen) {
                 const newHoverItemIndex = hoverItemIndex === 0 ? selectList.length - 1 : hoverItemIndex - 1
                 setHoverItemIndex(newHoverItemIndex)
+
+                scrollDropdownItems(newHoverItemIndex)
             }
         },
         [hoverItemIndex, isDropdownOpen],
@@ -70,6 +74,17 @@ const Select: React.FC<ModelsView.IInputSelectProps> = ({
         }
     }, [handleKeyDown])
     /* END - Tracking side-effects. */
+
+    const scrollDropdownItems = (itemIndex: number) => {
+        if (dropdownRef.current) {
+            dropdownRef.current.scroll({
+                // @ts-ignore
+                top: dropdownRef.current.children[itemIndex].offsetTop - DROPDOWN_OFFSET,
+                left: 0,
+                behavior: 'smooth',
+            })
+        }
+    }
 
     const dropdownClickHandler = (value: ModelsView.ISelectedData) => {
         onChange(value)
@@ -89,43 +104,40 @@ const Select: React.FC<ModelsView.IInputSelectProps> = ({
             {selectedItem === null ? <p className={style.placeholder}>{placeholder}</p> : null}
             <input
                 className={error ? `${style.input} ${style.input_error}` : style.input}
-                type={'button'}
+                type={'submit'}
                 value={selectedItem ? selectedItem.value : ''}
                 onClick={inputClickHandler}
             />
 
-            {isDropdownOpen ? (
-                <div
-                    className={style.dropdown}
-                    ref={dropdownRef}
-                    style={{ maxHeight: numberOfLines * DROPDOWN_ITEM_HEIGHT + DROPDOWN_OFFSET }}
-                >
-                    {selectList.length > 0 ? (
-                        selectList.map((selectItem: ModelsView.ISelectedData, index: number): JSX.Element => {
-                            let hoverClassName: string = hoverItemIndex === index ? style.dropdown__item_hover : ''
-                            let activeClassName: string =
-                                selectedItem && selectedItem.value === selectItem.value
-                                    ? style.dropdown__item_active
-                                    : ''
+            <div
+                className={`${style.dropdown} ${isDropdownOpen ? style.dropdown_open : ''}`}
+                ref={dropdownRef}
+                style={{ maxHeight: numberOfLines * DROPDOWN_ITEM_HEIGHT + DROPDOWN_OFFSET }}
+            >
+                {selectList.length > 0 ? (
+                    selectList.map((selectItem: ModelsView.ISelectedData, index: number): JSX.Element => {
+                        let hoverClassName: string = hoverItemIndex === index ? style.dropdown__item_hover : ''
+                        let activeClassName: string =
+                            selectedItem && selectedItem.value === selectItem.value ? style.dropdown__item_active : ''
 
-                            return (
-                                <div
-                                    className={`${style.dropdown__item} ${hoverClassName} ${activeClassName}`}
-                                    key={`InputSelect-Item-${selectItem.id}`}
-                                    onClick={() => dropdownClickHandler(selectItem)}
-                                    onMouseEnter={() => setHoverItemIndex(index)}
-                                >
-                                    {selectItem.value}
-                                </div>
-                            )
-                        })
-                    ) : (
-                        <div className={style.empty}>
-                            <div className={style.empty__title}>Нет данных</div>
-                        </div>
-                    )}
-                </div>
-            ) : null}
+                        return (
+                            <div
+                                className={`${style.dropdown__item} ${hoverClassName} ${activeClassName}`}
+                                key={`InputSelect-Item-${selectItem.id}`}
+                                onClick={() => dropdownClickHandler(selectItem)}
+                                onMouseEnter={() => setHoverItemIndex(index)}
+                            >
+                                {selectItem.value}
+                            </div>
+                        )
+                    })
+                ) : (
+                    <div className={style.empty}>
+                        <div className={style.empty__title}>Нет данных</div>
+                    </div>
+                )}
+            </div>
+
             {error ? <p className={style.error}>{error}</p> : null}
         </div>
     )
